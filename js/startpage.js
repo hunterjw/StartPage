@@ -79,12 +79,8 @@ function GetGreeting(hours) {
 	return toReturn;
 }
 
-function GetTimeString() {
+function GetState() {
 	var now = new Date();
-	var day = now.getDay();
-	var month = now.getMonth();
-	var date = now.getDate();
-	var year = now.getFullYear();
 	var hour = now.getHours();
 	var minute = now.getMinutes();
 
@@ -92,22 +88,27 @@ function GetTimeString() {
 
 	hour = (hour < 10 ? "0" : "") + hour;
 	minute = (minute < 10 ? "0" : "") + minute;
-	var timeString = hour + ":" + minute + " " + days[day] + " " + months[month]
-		+ " " + date + " " + year;
+	var timeString = hour + ":" + minute + " " + days[now.getDay()] + " " + months[now.getMonth()]
+		+ " " + now.getDate() + " " + now.getFullYear();
 
 	return {
 		time: timeString,
-		greeting: greetingString
+		greeting: greetingString,
+		currentSeconds: now.getSeconds()
 	};
 }
 
+function Draw(state) {
+	document.getElementById("time-text").textContent = state.time;
+	document.getElementById("greeting-text").textContent = state.greeting;
+	console.log(state.time);
+	console.log(state.greeting);
+}
+
 function Main() {
-	console.log("Hello world");
-	var strings = GetTimeString();
-	console.log(strings.time);
-	console.log(strings.greeting);
-	document.getElementById("time-text").textContent = strings.time;
-	document.getElementById("greeting-text").textContent = strings.greeting;
+	var state = GetState();
+	Draw(state);
+	setTimeout(Main, 60000 - (state.currentSeconds * 1000));
 }
 
 Main();
