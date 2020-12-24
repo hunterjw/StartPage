@@ -1,4 +1,4 @@
-var days = [
+const Days = [
 	"Sunday",
 	"Monday",
 	"Tuesday",
@@ -8,7 +8,7 @@ var days = [
 	"Saturday"
 ];
 
-const months = [
+const Months = [
 	"January",
 	"Febuary",
 	"March",
@@ -23,92 +23,117 @@ const months = [
 	"December"
 ];
 
-const lunchGreetings = [
+const LunchGreetings = [
 	"Enjoy your break",
 	"Lunch time!",
 	"Enjoy your lunch"
 ];
 
-const morningGreetings = [
+const MorningGreetings = [
 	"Good Morning",
 	"Have a wonderful day",
 	"Enjoy your day",
 	"Thanks for watching"
 ];
 
-const nightGreetings = [
+const NightGreetings = [
 	"Sleep well",
 	"Good Night",
 	"Night night",
 	"Time for bed"
 ];
 
-const afternoonGreetings = [
+const AfternoonGreetings = [
 	"Call it a day",
 	"Pack up work",
 	"Finish Move",
 	"Game Over"
 ];
 
-function GetGreeting(hours) {
-	const random = a => a[Math.floor(Math.random() * a.length)];
+class StartPage {
+	constructor() {
+		this.State = this.MakeState("", "", 0);
+		this.PreviousState = this.State;
+	}
 
-	var toReturn = "";
-	if (hours < 12) {
-		if (hours > 5) {
-			toReturn = random(morningGreetings);
-		}
-		else if (hours > 11) {
-			toReturn = random(lunchGreetings);
-		}
-		else {
-			toReturn = random(nightGreetings);
+	MakeState(timeDisplay, greetingDisplay, currentSeconds) {
+		return {
+			TimeDisplay: timeDisplay,
+			GreetingDisplay: greetingDisplay,
+			CurrentSeconds: currentSeconds
 		}
 	}
-	else {
-		if (hours < 13) {
-			toReturn = random(lunchGreetings);
+
+	Sleep(ms) {
+		return new Promise(resolve => setTimeout(resolve, ms));
+	}
+
+	MainLoop() {
+		this.Update();
+		this.Draw();
+		this.Sleep(60000 - (this.State.CurrentSeconds * 1000)).then(() => { this.MainLoop() });
+	}
+
+	Update() {
+		this.PreviousState = this.State;
+
+		var now = new Date();
+		var hour = now.getHours();
+		var minute = now.getMinutes();
+
+		var greetingString = this.GetGreeting(hour);
+
+		hour = (hour < 10 ? "0" : "") + hour;
+		minute = (minute < 10 ? "0" : "") + minute;
+		var timeString = hour + ":" + minute + " " + Days[now.getDay()] + " " + Months[now.getMonth()]
+			+ " " + now.getDate() + " " + now.getFullYear();
+
+		this.State = this.MakeState(timeString, greetingString, now.getSeconds());
+	}
+
+	Draw() {
+		console.log(this.State.TimeDisplay);
+		console.log(this.State.GreetingDisplay);
+		var timeElement = document.getElementById("time-text");
+		if (timeElement != null) {
+			timeElement.textContent = this.State.TimeDisplay;
 		}
-		if (hours > 21) {
-			toReturn = random(nightGreetings);
+		var greetingElement = document.getElementById("greeting-text");
+		if (greetingElement != null) {
+			greetingElement.textContent = this.State.GreetingDisplay;
+		}
+		
+	}
+
+	GetGreeting(hours) {
+		const random = a => a[Math.floor(Math.random() * a.length)];
+
+		var toReturn = "";
+		if (hours < 12) {
+			if (hours > 5) {
+				toReturn = random(MorningGreetings);
+			}
+			else if (hours > 11) {
+				toReturn = random(LunchGreetings);
+			}
+			else {
+				toReturn = random(NightGreetings);
+			}
 		}
 		else {
-			toReturn = random(afternoonGreetings);
+			if (hours < 13) {
+				toReturn = random(LunchGreetings);
+			}
+			if (hours > 21) {
+				toReturn = random(NightGreetings);
+			}
+			else {
+				toReturn = random(AfternoonGreetings);
+			}
 		}
+		return toReturn;
 	}
-	return toReturn;
 }
 
-function GetState() {
-	var now = new Date();
-	var hour = now.getHours();
-	var minute = now.getMinutes();
-
-	var greetingString = GetGreeting(hour);
-
-	hour = (hour < 10 ? "0" : "") + hour;
-	minute = (minute < 10 ? "0" : "") + minute;
-	var timeString = hour + ":" + minute + " " + days[now.getDay()] + " " + months[now.getMonth()]
-		+ " " + now.getDate() + " " + now.getFullYear();
-
-	return {
-		time: timeString,
-		greeting: greetingString,
-		currentSeconds: now.getSeconds()
-	};
-}
-
-function Draw(state) {
-	document.getElementById("time-text").textContent = state.time;
-	document.getElementById("greeting-text").textContent = state.greeting;
-	console.log(state.time);
-	console.log(state.greeting);
-}
-
-function Main() {
-	var state = GetState();
-	Draw(state);
-	setTimeout(Main, 60000 - (state.currentSeconds * 1000));
-}
-
-Main();
+var startPage = new StartPage();
+startPage.MainLoop();
