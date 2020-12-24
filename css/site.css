@@ -1,0 +1,10 @@
+.page-title {
+	background-color: white;
+}
+
+body {
+	background-image: url('../images/sample.png');
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-size: cover;
+}
