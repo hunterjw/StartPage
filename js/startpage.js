@@ -101,9 +101,19 @@ class StartPage {
 			greetingString = this.PreviousState.GreetingDisplay;
 		}
 
-		hour = (hour < 10 ? "0" : "") + hour;
-		minute = (minute < 10 ? "0" : "") + minute;
-		var timeString = hour + ":" + minute + " " + Days[now.getDay()] + " " + Months[now.getMonth()]
+		var clockString = "";
+		if (hour == 0 && minute == 0) {
+			clockString = "Midnight";
+		}
+		else if (hour == 12 && minute == 0) {
+			clockString = "Noon";
+		}
+		else {
+			hour = (hour < 10 ? "0" : "") + hour;
+			minute = (minute < 10 ? "0" : "") + minute;
+			clockString = hour + ":" + minute;
+		}
+		var timeString = clockString + " " + Days[now.getDay()] + " " + Months[now.getMonth()]
 			+ " " + now.getDate() + " " + now.getFullYear();
 
 		this.State = this.MakeState(timeString, greetingString, now.getSeconds(), timeOfDay);
