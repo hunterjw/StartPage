@@ -1,37 +1,42 @@
 @font-face {
 	font-family: minecraft;
-	src: url('../fonts/minecraft/minecraftfont.woff') format('woff'), 
-		url('../fonts/minecraft/minecraftfont.ttf') format('truetype');
+	src: url('../fonts/minecraft/minecraftfont.woff') format('woff'), url('../fonts/minecraft/minecraftfont.ttf') format('truetype');
 	font-weight: 900;
 }
 
-body {
+html, body {
 	background-image: url('../images/sample.png');
 	background-repeat: no-repeat;
 	background-size: cover;
 	background-position: center;
+	height: 100%;
+	margin: 0;
 }
 
-.title-text-container {
+.box {
 	display: flex;
-	height: 90%;
 	flex-direction: column;
+	height: 100%;
 }
 
-.title-text-div {
-	margin: auto;
-}
+	.box .content {
+		flex: 1 1 auto;
+		display: flex;
+	}
+
+	.box .footer {
+		flex: 0 1 auto;
+	}
 
 .title-text {
 	display: flex;
 	justify-content: center;
-	align-items: center;
 	color: white;
 	font-family: minecraft;
 	letter-spacing: 1px;
 	text-shadow: 1px 1px 1px #000;
 }
 
-.credits-container {
-	height: 5%;
+.container {
+	margin: auto;
 }
