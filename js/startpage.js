@@ -50,17 +50,26 @@ const AfternoonGreetings = [
 	"Game Over"
 ];
 
+const TimesOfDay = {
+	None: 0,
+	Morning: 1,
+	Lunch: 2,
+	Afternoon: 3,
+	Night: 4
+}
+
 class StartPage {
 	constructor() {
-		this.State = this.MakeState("", "", 0);
+		this.State = this.MakeState("", "", 0, TimesOfDay.None);
 		this.PreviousState = this.State;
 	}
 
-	MakeState(timeDisplay, greetingDisplay, currentSeconds) {
+	MakeState(timeDisplay, greetingDisplay, currentSeconds, timeOfDay) {
 		return {
 			TimeDisplay: timeDisplay,
 			GreetingDisplay: greetingDisplay,
-			CurrentSeconds: currentSeconds
+			CurrentSeconds: currentSeconds,
+			TimeOfDay: timeOfDay
 		}
 	}
 
@@ -81,14 +90,21 @@ class StartPage {
 		var hour = now.getHours();
 		var minute = now.getMinutes();
 
-		var greetingString = this.GetGreeting(hour);
+		var greetingString = ""
+		var timeOfDay = this.GetTimeOfDay(hour);
+		if (timeOfDay != this.PreviousState.TimeOfDay) {
+			greetingString = this.GetGreeting(timeOfDay);
+		}
+		else {
+			greetingString = this.PreviousState.GreetingDisplay;
+		}
 
 		hour = (hour < 10 ? "0" : "") + hour;
 		minute = (minute < 10 ? "0" : "") + minute;
 		var timeString = hour + ":" + minute + " " + Days[now.getDay()] + " " + Months[now.getMonth()]
 			+ " " + now.getDate() + " " + now.getFullYear();
 
-		this.State = this.MakeState(timeString, greetingString, now.getSeconds());
+		this.State = this.MakeState(timeString, greetingString, now.getSeconds(), timeOfDay);
 	}
 
 	Draw() {
@@ -105,30 +121,47 @@ class StartPage {
 		
 	}
 
-	GetGreeting(hours) {
+	GetGreeting(timeOfDay) {
 		const random = a => a[Math.floor(Math.random() * a.length)];
 
 		var toReturn = "";
+		if (timeOfDay == TimesOfDay.Morning) {
+			toReturn = random(MorningGreetings);
+		}
+		else if (timeOfDay == TimesOfDay.Lunch) {
+			toReturn = random(LunchGreetings);
+		}
+		else if (timeOfDay == TimesOfDay.Afternoon) {
+			toReturn = random(AfternoonGreetings);
+		}
+		else if (timeOfDay == TimesOfDay.Night) {
+			toReturn = random(NightGreetings);
+		}
+		return toReturn;
+	}
+
+	GetTimeOfDay(hours) {
+		var toReturn = TimesOfDay.None;
 		if (hours < 12) {
 			if (hours > 5) {
-				toReturn = random(MorningGreetings);
+				toReturn = TimesOfDay.Morning;
 			}
 			else if (hours > 11) {
-				toReturn = random(LunchGreetings);
+				toReturn = TimesOfDay.Lunch;
 			}
 			else {
-				toReturn = random(NightGreetings);
+				toReturn = TimesOfDay.Night;
 			}
 		}
 		else {
 			if (hours < 13) {
-				toReturn = random(LunchGreetings);
+				toReturn = TimesOfDay.Lunch;
 			}
 			if (hours > 21) {
-				toReturn = random(NightGreetings);
+				toReturn = TimesOfDay.Night;
 			}
 			else {
-				toReturn = random(AfternoonGreetings);
+				toReturn = TimesOfDay.Afternoon;
 			}
 		}
 		return toReturn;
