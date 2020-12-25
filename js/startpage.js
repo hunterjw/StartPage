@@ -62,6 +62,8 @@ class StartPage {
 	constructor() {
 		this.State = this.MakeState("", "", 0, TimesOfDay.None);
 		this.PreviousState = this.State;
+		this.TimeElement = document.getElementById("time-text");
+		this.GreetingElement = document.getElementById("greeting-text");
 	}
 
 	MakeState(timeDisplay, greetingDisplay, currentSeconds, timeOfDay) {
@@ -110,13 +112,11 @@ class StartPage {
 	Draw() {
 		console.log(this.State.TimeDisplay);
 		console.log(this.State.GreetingDisplay);
-		var timeElement = document.getElementById("time-text");
-		if (timeElement != null) {
-			timeElement.textContent = this.State.TimeDisplay;
+		if (this.TimeElement != null) {
+			this.TimeElement.textContent = this.State.TimeDisplay;
 		}
-		var greetingElement = document.getElementById("greeting-text");
-		if (greetingElement != null) {
-			greetingElement.textContent = this.State.GreetingDisplay;
+		if (this.GreetingElement != null) {
+			this.GreetingElement.textContent = this.State.GreetingDisplay;
 		}
 		
 	}
