@@ -258,30 +258,28 @@ class StartPage {
 	}
 
 	GetTimeOfDay(hours) {
-		var toReturn = TimesOfDay.None;
 		if (hours < 12) {
-			if (hours > 5) {
-				toReturn = TimesOfDay.Morning;
+			if (hours <= 5) {
+				return TimesOfDay.Night;
 			}
-			else if (hours > 11) {
-				toReturn = TimesOfDay.Lunch;
+			else if (hours < 11) {
+				return TimesOfDay.Morning;
 			}
 			else {
-				toReturn = TimesOfDay.Night;
+				return TimesOfDay.Lunch;
 			}
 		}
 		else {
 			if (hours < 13) {
-				toReturn = TimesOfDay.Lunch;
+				return TimesOfDay.Lunch;
 			}
-			if (hours > 21) {
-				toReturn = TimesOfDay.Night;
+			else if (hours <= 21) {
+				return TimesOfDay.Afternoon;
 			}
 			else {
-				toReturn = TimesOfDay.Afternoon;
+				return TimesOfDay.Night;
 			}
 		}
-		return toReturn;
 	}
 
 	GetRandomBackoundImage() {
