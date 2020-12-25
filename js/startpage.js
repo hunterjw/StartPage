@@ -162,7 +162,7 @@ class StartPage {
 		this.GreetingElement = document.getElementById("greeting-text");
 		this.BodyElement = document.body;
 		if (this.BodyElement != null) {
-			this.BodyElement.addEventListener("keypress", (event) => { this.OnKeypressHandler(event); });
+			this.BodyElement.addEventListener("keydown", (event) => { this.OnKeydownHandler(event); });
 			this.BodyElement.focus();
 		}
 	}
@@ -287,7 +287,7 @@ class StartPage {
 		return random(Backgrounds);
 	}
 
-	OnKeypressHandler(event) {
+	OnKeydownHandler(event) {
 		console.log(event.keyCode + " key pressed");
 		if (event.keyCode == 32) {
 			this.Update(true);
