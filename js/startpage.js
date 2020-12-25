@@ -58,20 +58,122 @@ const TimesOfDay = {
 	Night: 4
 }
 
+const Backgrounds = [
+	"images/backgrounds/faxdoc",
+	"images/backgrounds/kirokaze",
+	"images/backgrounds/landscapes",
+	"images/backgrounds/valenberg",
+	"images/backgrounds/faxdoc/cacao_and_coffee_shop.gif",
+	"images/backgrounds/faxdoc/comition_sky_left_to_right.gif",
+	"images/backgrounds/faxdoc/flower_shop.gif",
+	"images/backgrounds/faxdoc/lullaby.gif",
+	"images/backgrounds/faxdoc/midnight_melancholy.gif",
+	"images/backgrounds/faxdoc/mountain_mote.gif",
+	"images/backgrounds/faxdoc/nero_land.gif",
+	"images/backgrounds/faxdoc/sideshop.gif",
+	"images/backgrounds/faxdoc/stacking_houses_on_a_windy_day.gif",
+	"images/backgrounds/kirokaze/amp_prob.gif",
+	"images/backgrounds/kirokaze/attack.gif",
+	"images/backgrounds/kirokaze/bad_landing.gif",
+	"images/backgrounds/kirokaze/bluebalcony.gif",
+	"images/backgrounds/kirokaze/cemetry.gif",
+	"images/backgrounds/kirokaze/citymirror.gif",
+	"images/backgrounds/kirokaze/coffeeinrain.gif",
+	"images/backgrounds/kirokaze/dark_pillar.gif",
+	"images/backgrounds/kirokaze/droidcrime.gif",
+	"images/backgrounds/kirokaze/elderorc.gif",
+	"images/backgrounds/kirokaze/factory5.gif",
+	"images/backgrounds/kirokaze/familydinner.gif",
+	"images/backgrounds/kirokaze/horse.gif",
+	"images/backgrounds/kirokaze/iplayoldgames.gif",
+	"images/backgrounds/kirokaze/last_dance.gif",
+	"images/backgrounds/kirokaze/metro_final.gif",
+	"images/backgrounds/kirokaze/nightlytraining.gif",
+	"images/backgrounds/kirokaze/pilot.gif",
+	"images/backgrounds/kirokaze/player2.gif",
+	"images/backgrounds/kirokaze/reddriver.gif",
+	"images/backgrounds/kirokaze/robot_alley.gif",
+	"images/backgrounds/kirokaze/sandcastle.gif",
+	"images/backgrounds/kirokaze/shootingstars.gif",
+	"images/backgrounds/kirokaze/spacecommander.gif",
+	"images/backgrounds/kirokaze/spaceport.gif",
+	"images/backgrounds/kirokaze/thieves.gif",
+	"images/backgrounds/kirokaze/train.gif",
+	"images/backgrounds/kirokaze/train_city.gif",
+	"images/backgrounds/kirokaze/troll_cave.gif",
+	"images/backgrounds/kirokaze/wild_boy.gif",
+	"images/backgrounds/kirokaze/windyday.gif",
+	"images/backgrounds/kirokaze/youngatnight.gif",
+	"images/backgrounds/kirokaze/zombies.gif",
+	"images/backgrounds/landscapes/bridge.gif",
+	"images/backgrounds/landscapes/bridge_raining.gif",
+	"images/backgrounds/landscapes/castle.gif",
+	"images/backgrounds/landscapes/cave.gif",
+	"images/backgrounds/landscapes/coast.gif",
+	"images/backgrounds/landscapes/dawn.gif",
+	"images/backgrounds/landscapes/falls.gif",
+	"images/backgrounds/landscapes/fire.gif",
+	"images/backgrounds/landscapes/forrest.gif",
+	"images/backgrounds/landscapes/fortress.gif",
+	"images/backgrounds/landscapes/grandcanyon.gif",
+	"images/backgrounds/landscapes/lake.gif",
+	"images/backgrounds/landscapes/mountain.gif",
+	"images/backgrounds/landscapes/nature.gif",
+	"images/backgrounds/landscapes/northlights.gif",
+	"images/backgrounds/landscapes/rain.gif",
+	"images/backgrounds/landscapes/sea.gif",
+	"images/backgrounds/landscapes/snow.gif",
+	"images/backgrounds/landscapes/swamp.gif",
+	"images/backgrounds/landscapes/swirling.gif",
+	"images/backgrounds/landscapes/temple.gif",
+	"images/backgrounds/landscapes/tower.gif",
+	"images/backgrounds/landscapes/town.gif",
+	"images/backgrounds/landscapes/underwater.gif",
+	"images/backgrounds/valenberg/bicycle.gif",
+	"images/backgrounds/valenberg/blade.gif",
+	"images/backgrounds/valenberg/controlroom.gif",
+	"images/backgrounds/valenberg/daftpunk.gif",
+	"images/backgrounds/valenberg/drift.gif",
+	"images/backgrounds/valenberg/echoesfromneals.gif",
+	"images/backgrounds/valenberg/exodus.gif",
+	"images/backgrounds/valenberg/future.gif",
+	"images/backgrounds/valenberg/girlinrain.gif",
+	"images/backgrounds/valenberg/highfloor.gif",
+	"images/backgrounds/valenberg/highlands.gif",
+	"images/backgrounds/valenberg/highsoceity.gif",
+	"images/backgrounds/valenberg/jazznight.gif",
+	"images/backgrounds/valenberg/lowlands.gif",
+	"images/backgrounds/valenberg/moon.png",
+	"images/backgrounds/valenberg/motorcycle.gif",
+	"images/backgrounds/valenberg/nighttrain.gif",
+	"images/backgrounds/valenberg/redbicycle.gif",
+	"images/backgrounds/valenberg/ride.gif",
+	"images/backgrounds/valenberg/shop.gif",
+	"images/backgrounds/valenberg/skate.gif",
+	"images/backgrounds/valenberg/streets.gif",
+	"images/backgrounds/valenberg/sushi.gif",
+	"images/backgrounds/valenberg/tv.gif",
+	"images/backgrounds/valenberg/virtuaverse.gif"
+];
+
+const random = a => a[Math.floor(Math.random() * a.length)];
+
 class StartPage {
 	constructor() {
-		this.State = this.MakeState("", "", 0, TimesOfDay.None);
+		this.State = this.MakeState("", "", 0, TimesOfDay.None, "images\\sample.png");
 		this.PreviousState = this.State;
 		this.TimeElement = document.getElementById("time-text");
 		this.GreetingElement = document.getElementById("greeting-text");
+		this.BodyElement = document.body;
 	}
 
-	MakeState(timeDisplay, greetingDisplay, currentSeconds, timeOfDay) {
+	MakeState(timeDisplay, greetingDisplay, currentSeconds, timeOfDay, backgroundImage) {
 		return {
 			TimeDisplay: timeDisplay,
 			GreetingDisplay: greetingDisplay,
 			CurrentSeconds: currentSeconds,
-			TimeOfDay: timeOfDay
+			TimeOfDay: timeOfDay,
+			BackgroundImage: backgroundImage
 		}
 	}
 
@@ -92,13 +194,16 @@ class StartPage {
 		var hour = now.getHours();
 		var minute = now.getMinutes();
 
-		var greetingString = ""
+		var greetingString = "";
+		var backgroundImage = "";
 		var timeOfDay = this.GetTimeOfDay(hour);
 		if (timeOfDay != this.PreviousState.TimeOfDay) {
 			greetingString = this.GetGreeting(timeOfDay);
+			backgroundImage = this.GetRandomBackoundImage();
 		}
 		else {
 			greetingString = this.PreviousState.GreetingDisplay;
+			backgroundImage = this.PreviousState.BackgroundImage;
 		}
 
 		var clockString = "";
@@ -116,24 +221,26 @@ class StartPage {
 		var timeString = clockString + " " + Days[now.getDay()] + " " + Months[now.getMonth()]
 			+ " " + now.getDate() + " " + now.getFullYear();
 
-		this.State = this.MakeState(timeString, greetingString, now.getSeconds(), timeOfDay);
+		this.State = this.MakeState(timeString, greetingString, now.getSeconds(), timeOfDay, backgroundImage);
 	}
 
 	Draw() {
 		console.log(this.State.TimeDisplay);
 		console.log(this.State.GreetingDisplay);
+		console.log(this.State.BackgroundImage);
 		if (this.TimeElement != null) {
 			this.TimeElement.textContent = this.State.TimeDisplay;
 		}
 		if (this.GreetingElement != null) {
 			this.GreetingElement.textContent = this.State.GreetingDisplay;
 		}
+		if (this.BodyElement != null) {
+			this.BodyElement.style.backgroundImage = "url('" + this.State.BackgroundImage + "')";
+		}
 		
 	}
 
 	GetGreeting(timeOfDay) {
-		const random = a => a[Math.floor(Math.random() * a.length)];
-
 		var toReturn = "";
 		if (timeOfDay == TimesOfDay.Morning) {
 			toReturn = random(MorningGreetings);
@@ -175,6 +282,10 @@ class StartPage {
 			}
 		}
 		return toReturn;
+	}
+
+	GetRandomBackoundImage() {
+		return random(Backgrounds);
 	}
 }
 
