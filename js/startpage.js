@@ -59,10 +59,6 @@ const TimesOfDay = {
 }
 
 const Backgrounds = [
-	"images/backgrounds/faxdoc",
-	"images/backgrounds/kirokaze",
-	"images/backgrounds/landscapes",
-	"images/backgrounds/valenberg",
 	"images/backgrounds/faxdoc/cacao_and_coffee_shop.gif",
 	"images/backgrounds/faxdoc/comition_sky_left_to_right.gif",
 	"images/backgrounds/faxdoc/flower_shop.gif",
@@ -160,11 +156,15 @@ const random = a => a[Math.floor(Math.random() * a.length)];
 
 class StartPage {
 	constructor() {
-		this.State = this.MakeState("", "", 0, TimesOfDay.None, "images\\sample.png");
+		this.State = this.MakeState("", "", 0, TimesOfDay.None, "images/sample.png");
 		this.PreviousState = this.State;
 		this.TimeElement = document.getElementById("time-text");
 		this.GreetingElement = document.getElementById("greeting-text");
 		this.BodyElement = document.body;
+		if (this.BodyElement != null) {
+			this.BodyElement.addEventListener("keypress", (event) => { this.OnKeypressHandler(event); });
+			this.BodyElement.focus();
+		}
 	}
 
 	MakeState(timeDisplay, greetingDisplay, currentSeconds, timeOfDay, backgroundImage) {
@@ -182,12 +182,12 @@ class StartPage {
 	}
 
 	MainLoop() {
-		this.Update();
+		this.Update(false);
 		this.Draw();
 		this.Sleep(60000 - (this.State.CurrentSeconds * 1000)).then(() => { this.MainLoop() });
 	}
 
-	Update() {
+	Update(forceRefresh) {
 		this.PreviousState = this.State;
 
 		var now = new Date();
@@ -197,7 +197,8 @@ class StartPage {
 		var greetingString = "";
 		var backgroundImage = "";
 		var timeOfDay = this.GetTimeOfDay(hour);
-		if (timeOfDay != this.PreviousState.TimeOfDay) {
+		if ((timeOfDay != this.PreviousState.TimeOfDay) ||
+			forceRefresh) {
 			greetingString = this.GetGreeting(timeOfDay);
 			backgroundImage = this.GetRandomBackoundImage();
 		}
@@ -237,7 +238,7 @@ class StartPage {
 		if (this.BodyElement != null) {
 			this.BodyElement.style.backgroundImage = "url('" + this.State.BackgroundImage + "')";
 		}
-		
+
 	}
 
 	GetGreeting(timeOfDay) {
@@ -284,6 +285,14 @@ class StartPage {
 
 	GetRandomBackoundImage() {
 		return random(Backgrounds);
+	}
+
+	OnKeypressHandler(event) {
+		console.log(event.keyCode + " key pressed");
+		if (event.keyCode == 32) {
+			this.Update(true);
+			this.Draw();
+		}
 	}
 }
 

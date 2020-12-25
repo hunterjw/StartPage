@@ -8,20 +8,18 @@
 body {
 	background-image: url('../images/sample.png');
 	background-repeat: no-repeat;
-	background-attachment: fixed;
 	background-size: cover;
+	background-position: center;
 }
 
 .title-text-container {
 	display: flex;
-	height: 100%;
+	height: 95%;
 	flex-direction: column;
 }
 
 .title-text-div {
 	margin: auto;
-	padding-left: 10px;
-	padding-right: 10px;
 }
 
 .title-text {
@@ -32,4 +30,8 @@ body {
 	font-family: minecraft;
 	letter-spacing: 1px;
 	text-shadow: 1px 1px 1px #000;
+}
+
+.credits-container {
+	height: 5%;
 }
