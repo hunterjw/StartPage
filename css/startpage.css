@@ -37,6 +37,10 @@ html, body {
 	text-shadow: 1px 1px 1px #000;
 }
 
+.clock {
+	font-size: 4rem;
+}
+
 .container {
 	margin: auto;
 }

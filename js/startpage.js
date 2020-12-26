@@ -156,20 +156,26 @@ const random = a => a[Math.floor(Math.random() * a.length)];
 
 class StartPage {
 	constructor() {
-		this.State = this.MakeState("", "", 0, TimesOfDay.None, "images/sample.png");
+		this.State = this.MakeState("", "", "", 0, TimesOfDay.None,
+			"images/sample.png");
 		this.PreviousState = this.State;
-		this.TimeElement = document.getElementById("time-text");
+		this.DateElement = document.getElementById("date-text");
 		this.GreetingElement = document.getElementById("greeting-text");
 		this.BodyElement = document.body;
+		this.ClockElement = document.getElementById("clock-text");
 		if (this.BodyElement != null) {
-			this.BodyElement.addEventListener("keydown", (event) => { this.OnKeydownHandler(event); });
+			this.BodyElement.addEventListener("keydown", (event) => {
+				this.OnKeydownHandler(event);
+			});
 			this.BodyElement.focus();
 		}
 	}
 
-	MakeState(timeDisplay, greetingDisplay, currentSeconds, timeOfDay, backgroundImage) {
+	MakeState(clockDisplay, dateDisplay, greetingDisplay, currentSeconds,
+		timeOfDay, backgroundImage) {
 		return {
-			TimeDisplay: timeDisplay,
+			ClockDisplay: clockDisplay,
+			DateDisplay: dateDisplay,
 			GreetingDisplay: greetingDisplay,
 			CurrentSeconds: currentSeconds,
 			TimeOfDay: timeOfDay,
@@ -184,7 +190,9 @@ class StartPage {
 	MainLoop() {
 		this.Update(false);
 		this.Draw();
-		this.Sleep(60000 - (this.State.CurrentSeconds * 1000)).then(() => { this.MainLoop() });
+		this.Sleep(60000 - (this.State.CurrentSeconds * 1000)).then(() => {
+			this.MainLoop()
+		});
 	}
 
 	Update(forceRefresh) {
@@ -219,24 +227,30 @@ class StartPage {
 			minute = (minute < 10 ? "0" : "") + minute;
 			clockString = hour + ":" + minute;
 		}
-		var timeString = clockString + " " + Days[now.getDay()] + " " + Months[now.getMonth()]
+
+		var dateString = Days[now.getDay()] + " " + Months[now.getMonth()]
 			+ " " + now.getDate() + " " + now.getFullYear();
 
-		this.State = this.MakeState(timeString, greetingString, now.getSeconds(), timeOfDay, backgroundImage);
+		this.State = this.MakeState(clockString, dateString, greetingString,
+			now.getSeconds(), timeOfDay, backgroundImage);
 	}
 
 	Draw() {
 		console.log(this.State.TimeDisplay);
 		console.log(this.State.GreetingDisplay);
 		console.log(this.State.BackgroundImage);
-		if (this.TimeElement != null) {
-			this.TimeElement.textContent = this.State.TimeDisplay;
+		if (this.ClockElement != null) {
+			this.ClockElement.textContent = this.State.ClockDisplay;
+		}
+		if (this.DateElement != null) {
+			this.DateElement.textContent = this.State.DateDisplay;
 		}
 		if (this.GreetingElement != null) {
 			this.GreetingElement.textContent = this.State.GreetingDisplay;
 		}
 		if (this.BodyElement != null) {
-			this.BodyElement.style.backgroundImage = "url('" + this.State.BackgroundImage + "')";
+			this.BodyElement.style.backgroundImage = "url('" +
+				this.State.BackgroundImage + "')";
 		}
 
 	}
