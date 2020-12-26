@@ -34,7 +34,7 @@ html, body {
 	color: white;
 	font-family: minecraft;
 	letter-spacing: 1px;
-	text-shadow: 1px 1px 1px #000;
+	text-shadow: 5px 5px 5px #000;
 }
 
 .clock {
